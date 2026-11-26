@@ -34,6 +34,7 @@ import {
   uploadQuizReportToDrive,
 } from '../services/googleDrive';
 import { User } from 'firebase/auth';
+import { isAppsScriptConfigured, uploadReportToAppsScript } from '../services/appsScriptDrive';
 
 interface ComprehensionQuizProps {
   onCompleteQuiz: (score: number) => void;
@@ -261,8 +262,9 @@ export function ComprehensionQuiz({
       return;
     }
 
-    let token = getDriveAccessToken();
-    if (!token) {
+    const useScript = isAppsScriptConfigured();
+    let token = useScript ? null : getDriveAccessToken();
+    if (!useScript && !token) {
       try {
         const res = await signInToGoogleDrive();
         setDriveUser(res.user);
@@ -285,12 +287,17 @@ export function ComprehensionQuiz({
       const dateStr = new Date().toISOString().slice(0, 10);
       const fileName = `MrLongnose_Quiz_${safeSlug || 'Student'}_${dateStr}.html`;
       const htmlContent = buildReportHtml();
-      const uploaded = await uploadQuizReportToDrive({
-        fileName,
-        htmlContent,
-        accessToken: token,
-      });
-      setUploadedFile({ name: uploaded.name, webViewLink: uploaded.webViewLink });
+      if (useScript) {
+        const uploaded = await uploadReportToAppsScript({ fileName, htmlContent });
+        setUploadedFile({ name: uploaded.fileName });
+      } else {
+        const uploaded = await uploadQuizReportToDrive({
+          fileName,
+          htmlContent,
+          accessToken: token as string,
+        });
+        setUploadedFile({ name: uploaded.name, webViewLink: uploaded.webViewLink });
+      }
     } catch (err) {
       setUploadError(
         err instanceof Error ? err.message : 'Could not upload quiz to Google Drive.'
@@ -637,7 +644,7 @@ export function ComprehensionQuiz({
               )}
 
               <div className="flex flex-wrap items-center gap-3">
-                {needsDriveAuth ? (
+                {needsDriveAuth && !isAppsScriptConfigured() ? (
                   <button
                     type="button"
                     onClick={handleGoogleSignIn}
