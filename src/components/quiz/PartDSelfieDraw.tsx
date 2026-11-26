@@ -279,8 +279,17 @@ export function PartDSelfieDraw({
   const applyNewSelfie = (url: string) => {
     setRawSelfieDataUrl(url);
     setClearedSelfieDataUrl(null);
-    setUseSmartClear(false);
     setSmartClearError(null);
+    setUseSmartClear(true);
+    setIsSmartClearing(true);
+    extractFeatheredHead(url)
+      .then((res) => {
+        setClearedSelfieDataUrl(res.dataUrl);
+      })
+      .catch(() => {
+        setSmartClearError('Could not auto-clear this photo. Try a clearer front-facing photo.');
+      })
+      .finally(() => setIsSmartClearing(false));
   };
 
   const snapSelfie = () => {
@@ -929,25 +938,16 @@ export function PartDSelfieDraw({
                   </div>
 
                   {rawSelfieDataUrl && (
-                    <button
-                      type="button"
-                      onClick={handleToggleSmartClear}
-                      disabled={isSmartClearing}
-                      className={`inline-flex items-center justify-center gap-2 px-4 py-2 text-xs font-bold rounded-lg border-2 border-zinc-900 transition-colors cursor-pointer disabled:opacity-60 ${
-                        useSmartClear && clearedSelfieDataUrl
-                          ? 'bg-emerald-300 text-zinc-950 hover:bg-emerald-400'
-                          : 'bg-fuchsia-600 text-white hover:bg-fuchsia-700'
-                      }`}
-                    >
-                      <Sparkles className="w-3.5 h-3.5" />
-                      <span>
+                    <div className="flex items-center justify-center gap-2 text-xs font-bold">
+                      <Sparkles className="w-3.5 h-3.5 text-fuchsia-600" />
+                      <span className={isSmartClearing ? 'text-fuchsia-700' : 'text-emerald-700'}>
                         {isSmartClearing
-                          ? 'Smart Clearing Background...'
-                          : useSmartClear && clearedSelfieDataUrl
-                          ? 'Smart Clear ON (Show Original)'
-                          : 'Smart Clear Background (Keep Head & Hair)'}
+                          ? 'Removing background…'
+                          : clearedSelfieDataUrl
+                          ? 'Background removed automatically'
+                          : 'Background clearing…'}
                       </span>
-                    </button>
+                    </div>
                   )}
                 </div>
               )}
