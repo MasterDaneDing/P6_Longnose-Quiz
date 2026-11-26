@@ -68,25 +68,31 @@ export interface DriveUploadResult {
 
 export async function uploadQuizReportToDrive(params: {
   fileName: string;
-  htmlContent: string;
+  pdfBase64: string;
   accessToken: string;
 }): Promise<DriveUploadResult> {
-  const { fileName, htmlContent, accessToken } = params;
+  const { fileName, pdfBase64, accessToken } = params;
 
   const metadata = {
     name: fileName,
-    mimeType: 'text/html',
+    mimeType: 'application/pdf',
   };
 
+  const binary = Uint8Array.from(atob(pdfBase64), (c) => c.charCodeAt(0));
   const boundary = 'mr_longnose_quiz_boundary_2026';
-  const body =
+  const encoder = new TextEncoder();
+  const head = encoder.encode(
     `--${boundary}\r\n` +
-    `Content-Type: application/json; charset=UTF-8\r\n\r\n` +
-    `${JSON.stringify(metadata)}\r\n` +
-    `--${boundary}\r\n` +
-    `Content-Type: text/html; charset=UTF-8\r\n\r\n` +
-    `${htmlContent}\r\n` +
-    `--${boundary}--`;
+      `Content-Type: application/json; charset=UTF-8\r\n\r\n` +
+      `${JSON.stringify(metadata)}\r\n` +
+      `--${boundary}\r\n` +
+      `Content-Type: application/pdf\r\n\r\n`
+  );
+  const tail = encoder.encode(`\r\n--${boundary}--`);
+  const body = new Uint8Array(head.length + binary.length + tail.length);
+  body.set(head, 0);
+  body.set(binary, head.length);
+  body.set(tail, head.length + binary.length);
 
   const response = await fetch(
     'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id,name,webViewLink',

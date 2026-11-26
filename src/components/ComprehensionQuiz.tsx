@@ -35,6 +35,7 @@ import {
 } from '../services/googleDrive';
 import { User } from 'firebase/auth';
 import { isAppsScriptConfigured, uploadReportToAppsScript } from '../services/appsScriptDrive';
+import { htmlReportToPdfBase64 } from '../services/htmlToPdf';
 
 interface ComprehensionQuizProps {
   onCompleteQuiz: (score: number) => void;
@@ -289,15 +290,17 @@ export function ComprehensionQuiz({
         .replace(/[^a-zA-Z0-9_-]+/g, '_')
         .slice(0, 40);
       const dateStr = new Date().toISOString().slice(0, 10);
-      const fileName = `MrLongnose_Quiz_${safeSlug || 'Student'}_${dateStr}.html`;
       const htmlContent = buildReportHtml();
+      const fileName = `MrLongnose_Quiz_${safeSlug || 'Student'}_${dateStr}.pdf`;
       if (useScript) {
-        const uploaded = await uploadReportToAppsScript({ fileName, htmlContent });
+        const pdfBase64 = await htmlReportToPdfBase64(htmlContent);
+        const uploaded = await uploadReportToAppsScript({ fileName, pdfBase64 });
         setUploadedFile({ name: uploaded.fileName });
       } else {
+        const pdfBase64 = await htmlReportToPdfBase64(htmlContent);
         const uploaded = await uploadQuizReportToDrive({
           fileName,
-          htmlContent,
+          pdfBase64,
           accessToken: token as string,
         });
         setUploadedFile({ name: uploaded.name, webViewLink: uploaded.webViewLink });

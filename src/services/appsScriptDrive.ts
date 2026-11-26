@@ -17,7 +17,7 @@ export function isAppsScriptConfigured(): boolean {
 
 export async function uploadReportToAppsScript(params: {
   fileName: string;
-  htmlContent: string;
+  pdfBase64: string;
 }): Promise<AppsScriptUploadResult> {
   if (!APPS_SCRIPT_URL) {
     throw new Error('Apps Script upload URL is not configured.');
@@ -29,9 +29,9 @@ export async function uploadReportToAppsScript(params: {
     headers: { 'Content-Type': 'text/plain;charset=utf-8' },
     body: JSON.stringify({
       filename: params.fileName,
-      // The script expects pdfBase64; send base64 of the HTML so it works
-      // without changing the provided script.
-      pdfBase64: btoa(unescape(encodeURIComponent(params.htmlContent))),
+      // Real PDF bytes (base64, no data-uri prefix). The script decodes and
+      // writes them as application/pdf into the Drive folder.
+      pdfBase64: params.pdfBase64,
     }),
   });
 
