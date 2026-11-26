@@ -10,7 +10,6 @@ let imageSegmenterPromise: Promise<ImageSegmenter | null> | null = null;
 const FACE_MODEL_URL =
   'https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task';
 const SEGMENTER_MODEL_URL = './models/selfie_multiclass_256x256.tflite';
-  'https://storage.googleapis.com/mediapipe-models/image_segmenter/selfie_multiclass_256x256/float32/latest/selfie_multiclass_256x256.tflite';
 
 async function getVisionFileset() {
   try {
