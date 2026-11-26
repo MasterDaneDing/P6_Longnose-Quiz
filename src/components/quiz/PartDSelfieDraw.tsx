@@ -13,7 +13,6 @@ import {
   UserRound,
 } from 'lucide-react';
 import {
-  PARTD_FEELING_WORDS,
   PARTD_STUDENT_SPRITES,
   PartDScenario,
 } from '../../data/quizSpecData';
@@ -1008,30 +1007,9 @@ export function PartDSelfieDraw({
               <span className="font-display text-2xl font-bold text-zinc-900">.</span>
             </div>
 
-            <div className="space-y-2">
-              <p className="text-xs font-medium text-zinc-500">
-                Select or spell from these feelings:
-              </p>
-              <div className="flex flex-wrap gap-2">
-                {PARTD_FEELING_WORDS.map((word) => {
-                  const active = feelingAnswer.trim().toLowerCase() === word;
-                  return (
-                    <button
-                      key={word}
-                      type="button"
-                      onClick={() => onChangeFeelingAnswer(word)}
-                      className={`px-3.5 py-1.5 text-sm font-semibold rounded-lg border transition-colors cursor-pointer ${
-                        active
-                          ? 'bg-blue-700 text-white border-blue-700'
-                          : 'bg-[#faf9f5] text-zinc-800 border-zinc-300 hover:border-blue-600'
-                      }`}
-                    >
-                      {word}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
+            <p className="text-xs font-medium text-zinc-500">
+              Type how you feel — no word bank, remember it yourself!
+            </p>
 
             <div className="pt-3 border-t border-zinc-200 flex flex-wrap items-center justify-between gap-3">
               <div className="flex items-center gap-2 text-xs text-zinc-500">
