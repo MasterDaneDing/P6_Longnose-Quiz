@@ -1,0 +1,198 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: "KG Primary Penmanship";
+  src: url("/fonts/KGPrimaryPenmanship.ttf") format("truetype");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "KG So It Goes";
+  src: url("/fonts/KGSoItGoes.ttf") format("truetype");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@theme {
+  --font-display: "KG So It Goes", "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "KG Primary Penmanship", "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+
+  --text-xs: 1.5rem;
+  --text-xs--line-height: 1.35;
+  --text-sm: 1.75rem;
+  --text-sm--line-height: 1.35;
+  --text-base: 2rem;
+  --text-base--line-height: 1.4;
+  --text-lg: 2.25rem;
+  --text-lg--line-height: 1.35;
+  --text-xl: 2.5rem;
+  --text-xl--line-height: 1.3;
+  --text-2xl: 3rem;
+  --text-2xl--line-height: 1.25;
+  --text-3xl: 3.75rem;
+  --text-3xl--line-height: 1.2;
+  --text-4xl: 4.5rem;
+  --text-4xl--line-height: 1.15;
+  --text-5xl: 5.5rem;
+  --text-5xl--line-height: 1.1;
+  --text-6xl: 6.5rem;
+  --text-6xl--line-height: 1.08;
+}
+
+@layer base {
+  html {
+    font-family: var(--font-sans);
+    background-color: #a21caf;
+    color: #18181b;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    font-size: 2rem;
+    line-height: 1.4;
+  }
+
+  h1, h2, h3, .font-display {
+    font-family: var(--font-display);
+    letter-spacing: 0.015em;
+  }
+
+  button:focus-visible,
+  a:focus-visible,
+  input:focus-visible,
+  select:focus-visible {
+    outline: 2px solid #f97316;
+    outline-offset: 2px;
+  }
+}
+
+.comic-paper-grid {
+  background-color: #a21caf;
+  background-image:
+    radial-gradient(rgba(255, 255, 255, 0.22) 1px, transparent 1px),
+    linear-gradient(135deg, #ff2a9d 0%, #c026d3 50%, #7e22ce 100%);
+  background-size: 16px 16px, 100% 100%;
+  background-attachment: fixed;
+}
+
+.neon-inner-frame {
+  background: linear-gradient(145deg, #fff96b 0%, #fde047 52%, #ffa94d 100%);
+  border: 2px solid #18181b;
+  box-shadow: 6px 6px 0px 0px rgba(24, 24, 27, 1);
+}
+
+.neon-sub-frame {
+  background: linear-gradient(145deg, #fef9c3 0%, #ffedd5 100%);
+  border: 2px solid #18181b;
+}
+
+/* Comic flailing animations for Part 1 draggable characters */
+@keyframes comicFlailArmLeft {
+  0%, 100% { transform: rotate(-48deg); }
+  50% { transform: rotate(38deg); }
+}
+
+@keyframes comicFlailArmRight {
+  0%, 100% { transform: rotate(48deg); }
+  50% { transform: rotate(-38deg); }
+}
+
+@keyframes comicFlailLegLeft {
+  0%, 100% { transform: rotate(-28deg); }
+  50% { transform: rotate(28deg); }
+}
+
+@keyframes comicFlailLegRight {
+  0%, 100% { transform: rotate(28deg); }
+  50% { transform: rotate(-28deg); }
+}
+
+@keyframes comicWobble {
+  0%, 100% { transform: rotate(-4deg) translateY(0px); }
+  50% { transform: rotate(4deg) translateY(-3px); }
+}
+
+@keyframes comicIdleBob {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-2.5px); }
+}
+
+.animate-flail-arm-l {
+  transform-box: fill-box;
+  transform-origin: 80% 15%;
+  animation: comicFlailArmLeft 0.16s ease-in-out infinite;
+}
+
+.animate-flail-arm-r {
+  transform-box: fill-box;
+  transform-origin: 20% 15%;
+  animation: comicFlailArmRight 0.16s ease-in-out infinite;
+}
+
+.animate-flail-leg-l {
+  transform-box: fill-box;
+  transform-origin: 50% 5%;
+  animation: comicFlailLegLeft 0.15s ease-in-out infinite;
+}
+
+.animate-flail-leg-r {
+  transform-box: fill-box;
+  transform-origin: 50% 5%;
+  animation: comicFlailLegRight 0.15s ease-in-out infinite;
+}
+
+.animate-comic-wobble {
+  animation: comicWobble 0.2s ease-in-out infinite;
+}
+
+.animate-comic-idle {
+  animation: comicIdleBob 2.2s ease-in-out infinite;
+}
+
+/* Official Google Sign-In Material Button styling */
+.gsi-material-button {
+  user-select: none;
+  background-color: #ffffff;
+  border: 1px solid #747775;
+  border-radius: 8px;
+  color: #1f1f1f;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 600;
+  height: 42px;
+  padding: 0 16px;
+  transition: background-color 0.2s, box-shadow 0.2s;
+}
+
+.gsi-material-button:hover {
+  background-color: #f8fafc;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+}
+
+.gsi-material-button-content-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.gsi-material-button-icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

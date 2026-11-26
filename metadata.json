@@ -1,0 +1,6 @@
+{
+  "name": "Mr. Longnose — Primary 6 English Storybook",
+  "description": "An interactive 1980s comic-book English learning adventure featuring the 31-page Mr. Longnose story, jobs matching lab, character adjectives studio, and comprehension quiz.",
+  "requestFramePermissions": ["camera"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
