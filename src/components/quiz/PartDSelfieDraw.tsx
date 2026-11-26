@@ -17,7 +17,7 @@ import {
   PARTD_STUDENT_SPRITES,
   PartDScenario,
 } from '../../data/quizSpecData';
-import { smartClearSelfieBackground } from '../../utils/selfieSegmenter';
+import { extractFeatheredHead, warmUpHeadSegmenter } from '../../utils/headSegmenter';
 
 export type StudentGender = 'boy' | 'girl';
 
@@ -182,6 +182,10 @@ export function PartDSelfieDraw({
 
   // Load the boy or girl 1980s comic-book illustration for this scenario
   useEffect(() => {
+    warmUpHeadSegmenter();
+  }, []);
+
+  useEffect(() => {
     let cancelled = false;
     setBgFailed(false);
     const img = new Image();
@@ -330,7 +334,7 @@ export function PartDSelfieDraw({
     setIsSmartClearing(true);
     setSmartClearError(null);
     try {
-      const cutout = await smartClearSelfieBackground(rawSelfieDataUrl);
+      const cutout = (await extractFeatheredHead(rawSelfieDataUrl)).dataUrl;
       setClearedSelfieDataUrl(cutout);
       setUseSmartClear(true);
     } catch {
