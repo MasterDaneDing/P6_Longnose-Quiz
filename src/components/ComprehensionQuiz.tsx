@@ -118,8 +118,9 @@ export function ComprehensionQuiz({
       (sum, q) => sum + (part2Answers[q.id] === q.targetFeeling ? 1 : 0),
       0
     );
+    const norm = (v?: string) => (v || '').toLowerCase().trim().replace(/\s+/g, '-');
     const p3 = session.part3Questions.reduce(
-      (sum, q) => sum + (part3Answers[q.id] === q.targetAdjective ? 1 : 0),
+      (sum, q) => sum + (norm(part3Answers[q.id]) === q.targetAdjective ? 1 : 0),
       0
     );
     return { p1, p2, p3, autoTotal: p1 + p2 + p3 };
@@ -128,6 +129,9 @@ export function ComprehensionQuiz({
   const handleFinishPartD = () => {
     onCompleteQuiz(scores.autoTotal);
     setStage('summary');
+    if (isAppsScriptConfigured()) {
+      void handleSendToDrive();
+    }
   };
 
   const handleRestartQuiz = () => {
@@ -667,17 +671,30 @@ export function ComprehensionQuiz({
                   </button>
                 ) : (
                   <>
-                    <button
-                      type="button"
-                      onClick={handleSendToDrive}
-                      disabled={isUploading}
-                      className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold text-white bg-blue-700 rounded-xl hover:bg-blue-800 disabled:opacity-50 cursor-pointer"
-                    >
-                      <UploadCloud className="w-4 h-4" />
-                      <span>
-                        {isUploading ? 'Uploading to Drive...' : 'Send Quiz to Google Drive'}
-                      </span>
-                    </button>
+                    {isAppsScriptConfigured() ? (
+                      <div className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold rounded-xl bg-blue-50 text-blue-800 border border-blue-200">
+                        <UploadCloud className="w-4 h-4" />
+                        <span>
+                          {isUploading
+                            ? 'Sending to Google Drive…'
+                            : uploadedFile
+                            ? 'Sent to Google Drive automatically'
+                            : 'Will send to Google Drive automatically'}
+                        </span>
+                      </div>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={handleSendToDrive}
+                        disabled={isUploading}
+                        className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold text-white bg-blue-700 rounded-xl hover:bg-blue-800 disabled:opacity-50 cursor-pointer"
+                      >
+                        <UploadCloud className="w-4 h-4" />
+                        <span>
+                          {isUploading ? 'Uploading to Drive...' : 'Send Quiz to Google Drive'}
+                        </span>
+                      </button>
+                    )}
 
                     {driveUser && (
                       <button

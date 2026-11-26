@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { ArrowRight, CheckCircle2 } from 'lucide-react';
-import { PART3_OPTIONS, Part3Question } from '../../data/quizSpecData';
+import { Part3Question } from '../../data/quizSpecData';
 import { ComicImage } from '../ComicImage';
 
 interface Part3AdjectivesQuizProps {
@@ -93,25 +93,22 @@ export function Part3AdjectivesQuiz({
               Choose an adjective ({activeIndex + 1} of {questions.length})
             </div>
 
-            <div className="grid grid-cols-1 gap-3">
-              {PART3_OPTIONS.map((adj) => {
-                const isPicked = selectedWord === adj;
-                return (
-                  <button
-                    key={adj}
-                    type="button"
-                    onClick={() => onSelectAnswer(activeQuestion.id, adj)}
-                    className={`px-4 py-3.5 rounded-xl border-2 text-left font-display text-lg font-bold transition-colors cursor-pointer flex items-center justify-between ${
-                      isPicked
-                        ? 'bg-blue-700 border-blue-700 text-white'
-                        : 'bg-[#faf9f5] border-zinc-200 text-zinc-900 hover:border-blue-600'
-                    }`}
-                  >
-                    <span>{adj}</span>
-                    {isPicked && <CheckCircle2 className="w-5 h-5 text-white shrink-0" />}
-                  </button>
-                );
-              })}
+            <div className="space-y-2">
+              <input
+                type="text"
+                value={selectedWord}
+                onChange={(e) =>
+                  onSelectAnswer(activeQuestion.id, e.target.value.toLowerCase().trim())
+                }
+                placeholder="Type the missing adjective…"
+                autoComplete="off"
+                autoCapitalize="off"
+                spellCheck={false}
+                className="w-full px-4 py-3.5 rounded-xl border-2 border-zinc-300 bg-[#faf9f5] font-display text-lg font-bold text-zinc-900 outline-none focus:border-blue-600 focus:bg-white"
+              />
+              <p className="text-xs text-zinc-500">
+                Type the adjective you remember — no options shown.
+              </p>
             </div>
           </div>
 
